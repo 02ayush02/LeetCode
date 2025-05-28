@@ -1,1 +1,11 @@
-a
+class Solution {
+public:
+    int differenceOfSums(int n, int m) {
+        int a = (n*(n + 1)) / 2;
+
+        int b = n / m;
+        int cnt = m*(b*(b + 1) / 2);
+
+        return a - 2*cnt;
+    }
+};
