@@ -1,0 +1,54 @@
+class Solution {
+public:
+    int maxDiff(int num) {
+        string s = to_string(num);
+        string a = s;
+        int n = s.size();
+        char save = 'a';
+        for (auto it : s) {
+            if (it != '9') {
+                save = it;
+                break;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (s[i] == save) {
+                s[i] = '9';
+            }
+        }
+
+        char save2 = a[0];
+        
+        if (save2 == '1') {
+            bool flag = false;
+            for (int i = 1; i < n; i++) {
+                if (a[i] != save2 && a[i] != '0') {
+                    flag = true;
+                    save2 = a[i];
+                    break;
+                }
+            }
+
+            if (flag == true) {
+                for (int i = 1; i < n; i++) {
+                    if (a[i] == save2) {
+                        a[i] = '0';
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < n; i++) {
+                if (save2 == a[i]) {
+                    a[i] = '1';
+                }
+            }
+        }
+
+        cout << s << " " << a << "\n";
+        int num1 = stoi(s);
+        int num2 = stoi(a);
+
+        return num1 - num2;
+    }
+};
