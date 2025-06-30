@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        map<int, int> mpp;
+        int ans = 0;
+        for (auto it : nums) mpp[it]++;
+
+        for (auto it : mpp) {
+            int digit = it.first;
+            int cnt = it.second;
+
+            int add = mpp.count(digit + 1);
+            if (add == 1) {
+                add = mpp[digit + 1];
+            }
+
+            if (add + cnt > cnt) ans = max(ans, add + cnt);
+        } 
+        return ans;
+    }
+};
