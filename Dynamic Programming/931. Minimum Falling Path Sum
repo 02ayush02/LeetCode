@@ -1,0 +1,66 @@
+class Solution {
+public:
+    // long long func(int i, int j, vector<vector<int>>& matrix, vector<vector<long long>>& dp) {
+    //     if (j < 0 || j >= matrix.size()) {
+    //         return INT_MAX;
+    //     }
+    //     if (i == 0) {
+    //         return matrix[0][j];
+    //     }
+
+    //     if (dp[i][j] != 0) return dp[i][j];
+        
+    //     long long up = matrix[i][j] + func(i - 1, j, matrix, dp);
+    //     long long leftUp = matrix[i][j] + func(i - 1, j - 1, matrix, dp);
+    //     long long rightUp = matrix[i][j] + func(i - 1, j + 1, matrix, dp);
+
+
+    //     return dp[i][j] = min(up, min(leftUp, rightUp));
+    // }
+
+    
+
+
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        long long ans = INT_MAX;
+
+        // vector<vector<long long>> dp(n, vector<long long>(n, 0));
+
+        vector<long long>prev(n , 0);
+
+        for (int i = 0; i < n; i++) {
+            prev[i] = matrix[0][i];
+        }
+
+        for (int i = 1; i < n; i++) {
+            vector<long long>curr(n , 0);
+            for (int j = 0; j < n; j++) {
+                long long up = matrix[i][j] + prev[j];
+
+                long long leftUp = matrix[i][j];
+                if (j > 0) leftUp += prev[j - 1];
+                else leftUp += INT_MAX;
+                long long rightUp = matrix[i][j];
+                if (j < n - 1) rightUp += prev[j + 1];
+                else rightUp += INT_MAX;
+
+                curr[j] = min({up, leftUp, rightUp});
+            }
+            prev = curr;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            ans = min(prev[i], ans);
+        }
+
+        return ans;
+
+
+        // for (int i = 0; i < n; i++) {
+        //     ans = min(ans, func(n - 1, i, matrix, dp));
+        // }
+
+        // return ans;
+    }
+};
