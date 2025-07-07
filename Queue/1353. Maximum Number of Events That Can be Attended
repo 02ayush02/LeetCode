@@ -1,0 +1,63 @@
+class Solution {
+public:
+    int maxEvents(vector<vector<int>>& events) {
+        sort(events.begin(), events.end());
+        int day = events[0][0];
+        int cnt = 0;
+        int i = 0;
+        int n = events.size();
+        priority_queue<int, vector<int>, greater<int>> pq;
+
+        while (i < n || !pq.empty()) {
+            if (pq.empty()) {
+                day = events[i][0];
+            }
+
+            while (i < n && events[i][0] == day) {
+                pq.push(events[i][1]);
+                i++;
+            }
+
+            if (!pq.empty()) {
+                pq.pop();
+                cnt++;
+            }
+            day++;
+
+            while (!pq.empty() && pq.top() < day) {
+                pq.pop();
+            }
+        }
+
+        return cnt;
+
+
+        // priority_queue<vector<int>> pq;
+        // int maxi = INT_MIN;
+        // for (auto it : events) {
+        //     pq.push(it);
+        //     maxi = max(maxi, it[1]);
+        // }
+
+        // vector<int>a(maxi + 1, 0);
+
+        // a[0] = 1;   
+        // int cnt = 0;
+        // while (!pq.empty()) {
+        //     int start = pq.top()[0];
+        //     int end = pq.top()[1];
+        //     pq.pop();
+
+        //     while (start <= end) {
+        //         if (a[end] == 0) {
+        //             a[end] = 1;
+        //             cnt++;
+        //             break;
+        //         }
+        //         end--;
+        //     }
+        // }
+
+        // return cnt;
+    }
+};
