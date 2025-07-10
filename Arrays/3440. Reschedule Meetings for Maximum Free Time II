@@ -1,0 +1,67 @@
+class Solution {
+public:
+    int func(int index, vector<int>&startTime,vector<int>& endTime, vector<pair<int,int>>& gap,
+    int eventTime, int n) {
+
+        int busy = endTime[index] - startTime[index];
+
+        bool flag = false;
+
+        for (int i = 0; i < 3; i++) {
+            if (busy <= gap[i].first && gap[i].second != index && gap[i].second != index + 1) {
+                flag = true;
+                break;
+            }
+        }
+
+        int end = (index == 0) ? 0 : endTime[index - 1];
+        int jump = startTime[index + 1] - end;
+
+        if (flag) return jump;
+
+        return jump - busy;
+    }
+
+    int maxFreeTime(int eventTime, vector<int>& startTime, vector<int>& endTime) {
+        int n = startTime.size();   
+        startTime.push_back(eventTime);
+        vector<pair<int, int>> gap(3, {0, 0}); // {gap, index}
+        
+        gap[0] = {startTime[0] - 0, 0};    
+        gap[1] = {startTime[1] - endTime[0], 1};
+        gap[2] = {startTime[2] - endTime[1], 2};
+        
+
+        if (gap[0].first < gap[1].first) {
+            swap(gap[0], gap[1]);
+        } 
+        if (gap[1].first < gap[2].first) {
+            swap(gap[1], gap[2]);
+        }
+        if (gap[0].first < gap[1].first) {
+            swap(gap[0], gap[1]);
+        }
+
+        for (int i = 3; i <= n; i++) {
+            int currGap = startTime[i] - endTime[i - 1];
+            if (currGap >= gap[0].first) {
+                swap(gap[2], gap[1]);
+                swap(gap[0], gap[1]);
+                gap[0] = {currGap, i};
+            } else if (currGap >= gap[1].first) {
+                swap(gap[1], gap[2]);
+                gap[1] = {currGap, i};
+            } else if (currGap >= gap[2].first) {
+                gap[2] = {currGap, i};
+            }
+        }
+
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            ans = max(ans, func(i, startTime, endTime, gap, eventTime, n));
+        }
+
+        return ans;
+    }
+};
