@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int longestIncreasingPath(int row, int col, vector<vector<int>>& matrix,
+        vector<vector<int>>& visited, int n, int m) {
+        if (visited[row][col] != 0) return visited[row][col];
+
+        vector<pair<int, int>> arr = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        int maxiPath = 0;
+        for (int i = 0; i < 4; i++) {
+            int nrow = row + arr[i].first;
+            int ncol = col + arr[i].second;
+
+            if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m && 
+                matrix[nrow][ncol] > matrix[row][col]) {
+                    int path = longestIncreasingPath(nrow, ncol, matrix, visited, n, m);
+                    maxiPath = max(maxiPath, path);
+                }
+        }
+
+        visited[row][col] = maxiPath + 1;
+
+        return visited[row][col];
+    }
+
+
+
+
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        vector<vector<int>>visited(n, vector<int>(m , 0));
+
+        int longestPath = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                int path = longestIncreasingPath(i, j, matrix, visited, n, m);
+                longestPath = max(longestPath, path);
+            }
+        }
+
+        return longestPath;
+    }
+};
