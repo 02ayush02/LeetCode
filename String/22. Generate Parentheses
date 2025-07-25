@@ -1,0 +1,24 @@
+class Solution {
+public:
+    void func(int n, int i, int j, vector<string>& ans, string s) {
+        if (i == n && j == n) {
+            ans.push_back(s);
+            return;
+        }
+
+        if (i < n && i >= j) {
+            func(n, i + 1, j, ans, s + '(');
+        }
+        if (j < n && i >= j) {
+            func(n, i, j + 1, ans, s + ')');
+        }
+    }
+
+
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        func(n, 0, 0, ans, "");
+
+        return ans;
+    }
+};
