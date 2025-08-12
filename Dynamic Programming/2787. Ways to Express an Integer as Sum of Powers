@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int func(int curr, int num, int x, const int MOD, vector<vector<int>>& dp) {
+        if (num < 0) return 0;
+        if (num == 0) return 1;
+
+        if (dp[curr][num] != -1) return dp[curr][num];
+
+        int sum = 0;
+        for (int i = curr; pow(i, x) <= num; i++) {
+            sum = (sum + func(i + 1, num - pow(i, x), x, MOD, dp)) % MOD;
+        }
+        return dp[curr][num] = sum;
+    }
+
+    int numberOfWays(int n, int x) {
+        const int MOD = 1e9 + 7;
+        // vector<vector<int>> dp(n + 1, vector<int>(n + 1, -1));
+        // return func(1, n, x, MOD, dp);
+
+        vector<int> powers;
+        for (int i = 1; pow(i, x) <= n; i++) {
+            powers.push_back((int)pow(i, x));
+        }
+
+        vector<int> dp(n + 1, 0);
+        dp[0] = 1; 
+
+        for (int p : powers) {
+            for (int sum = n; sum >= p; sum--) {
+                dp[sum] = (dp[sum] + dp[sum - p]) % MOD;
+            }
+        }
+
+        return dp[n];
+    }
+};
