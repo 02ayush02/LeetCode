@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int minScore(int n, vector<vector<int>>& roads) {
+
+        vector<vector<pair<int, int>>> adj(n + 1);
+
+        for (auto it : roads) {
+            adj[it[0] - 1].push_back({it[1] - 1, it[2]});
+            adj[it[1] - 1].push_back({it[0] - 1, it[2]});
+        }
+
+        vector<int> vis(n + 1, 0);
+        vis[0] = 1;
+        queue<int> q;
+        q.push(0);
+
+        int ans = INT_MAX;
+
+        // it will give us the mininum distance path
+        while(!q.empty()) {
+            auto node = q.front();
+            q.pop();
+            for (auto it : adj[node]) {
+                if (!vis[it.first]) {
+                    q.push(it.first);
+                    vis[it.first] = 1;
+                }
+            }
+        }
+        // now we have to know the path which we have followed to get the minimum distance path
+        // whether we have taken that path of not, it taken then check the score of that path
+        int size = roads.size();
+        for (int i = 0; i < size; i++) {
+            if (vis[roads[i][0] - 1] && vis[roads[i][1] - 1]) {
+                ans = min(ans, roads[i][2]);
+            }
+        }
+        return ans;
+    }
+};
