@@ -1,0 +1,35 @@
+class Solution {
+public:
+    long long solve(long long left, long long right) {
+        long long times = 1;
+        long long cnt = 0;
+        long long L = 1;
+
+        while (L <= right) {
+            long long R = 4 * L - 1;
+
+            long long start = max(left, L);
+            long long end = min(right, R);
+
+            if (start <= end) {
+                cnt += (end - start + 1) * times;
+            }
+            times += 1;
+            L = L * 4;
+        }
+
+        return cnt;
+    }
+
+    long long minOperations(vector<vector<int>>& queries) {
+        long long ans = 0;
+        
+        for (auto it : queries) {
+            long long left = it[0];
+            long long right = it[1];
+            ans += (solve(left, right) + 1) / 2;
+        }
+
+        return ans;
+    }
+};
