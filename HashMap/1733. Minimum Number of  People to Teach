@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int minimumTeachings(int n, vector<vector<int>>& languages, vector<vector<int>>& friendships) {
+        int Nlan = languages.size();
+        
+        map<int, set<int>> mpp;
+        for (int i = 0; i < Nlan; i++) {
+            for (auto it : languages[i]) {
+                mpp[i + 1].insert(it);
+            }
+        }
+
+        set<int> candidates;
+        for (auto it : friendships) {
+            int user1 = it[0];
+            int user2 = it[1];
+            bool flag = false;
+            for (int i : mpp[user1]) {
+                if (mpp[user2].find(i) != mpp[user2].end()) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                candidates.insert(user1);
+                candidates.insert(user2);
+            }
+        }
+
+        if (candidates.empty()) return 0;
+
+        int ans = INT_MAX;
+        for (int lang = 1; lang <= n; lang++) {
+            int cnt = 0;
+            for (int user : candidates) {
+                if (mpp[user].find(lang) == mpp[user].end()) {
+                    cnt++;
+                }
+            }
+            ans = min(ans, cnt);
+        }
+
+        return ans;
+    }
+};
