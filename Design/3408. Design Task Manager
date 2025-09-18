@@ -1,0 +1,60 @@
+class TaskManager {
+public:
+    unordered_map<int, pair<int, int>> mpp; // taskId -> {userId, priority}
+    priority_queue<pair<int, int>> pq;  // {priority, taskId}
+
+    TaskManager(vector<vector<int>>& tasks) {
+        for (auto& task : tasks) {
+            int userId = task[0];
+            int taskId = task[1];
+            int priority = task[2];
+            pq.push({priority, taskId});
+            mpp[taskId] = {userId, priority};
+        }
+    }
+    
+    void add(int userId, int taskId, int priority) {
+        pq.push({priority, taskId});
+        mpp[taskId] = {userId, priority};
+    }
+    
+    void edit(int taskId, int newPriority) {
+        mpp[taskId].second = newPriority;
+        pq.push({newPriority, taskId});
+    }
+    
+    void rmv(int taskId) {  
+        mpp.erase(taskId);
+    }
+    
+    int execTop() {
+        while (!pq.empty()) {
+            int priority = pq.top().first;
+            int taskId = pq.top().second;
+            
+
+            // This is for maintaining the order which was displaced due to 
+            // edit and rmv, this (if) part is the most important part of the code
+            if (mpp.find(taskId) == mpp.end() || mpp[taskId].second != priority) {
+                pq.pop();
+                continue;
+            }
+
+            int userId = mpp[taskId].first;
+            pq.pop();
+            mpp.erase(taskId);
+            return userId;
+        }
+        
+        return -1; 
+    }
+};
+
+/**
+ * Your TaskManager object will be instantiated and called as such:
+ * TaskManager* obj = new TaskManager(tasks);
+ * obj->add(userId,taskId,priority);
+ * obj->edit(taskId,newPriority);
+ * obj->rmv(taskId);
+ * int param_4 = obj->execTop();
+ */
