@@ -1,0 +1,50 @@
+class Spreadsheet {
+public:
+    map<pair<char, int>, int>mpp;
+    Spreadsheet(int rows) {
+        
+    }
+    
+    void setCell(string cell, int value) {
+        char c = cell[0];   
+        string s(cell.begin() + 1, cell.end());
+        int row = stoi(s);
+        mpp[{c, row}] = value;
+    }
+    
+    void resetCell(string cell) {
+        char c = cell[0];   
+        string s(cell.begin() + 1, cell.end());
+        int row = stoi(s);
+        mpp[{c, row}] = 0;
+    }
+    
+    int getValue(string formula) {
+        int n = formula.find('+');
+        int x , y;
+
+        string s1 = formula.substr(1, n - 1), s2 = formula.substr(n + 1);
+
+        if (formula[1] >= 'A') {
+            string a = s1.substr(1);
+            int num = stoi(a);
+            x = mpp[{s1[0], num}];
+        } else x = stoi(s1);
+
+        if (formula[n + 1] >= 'A') {
+            string a = s2.substr(1);
+            int num = stoi(a);
+            y = mpp[{s2[0], num}];
+        } else y = stoi(s2);
+
+        return x + y;
+    }
+};
+
+/**
+ * Your Spreadsheet object will be instantiated and called as such:
+ * Spreadsheet* obj = new Spreadsheet(rows);
+ * obj->setCell(cell,value);
+ * obj->resetCell(cell);
+ * int param_3 = obj->getValue(formula);
+ */
