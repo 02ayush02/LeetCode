@@ -1,0 +1,54 @@
+class Solution {
+public:
+    void dfs(int row, int col,string dir, vector<vector<int>>& visited,set<pair<int, int>>& st) {
+        if (row < 0 || col < 0 || row == visited.size() || col == visited[0].size()) return;
+        if (st.find({row, col}) != st.end()) return;
+        
+        visited[row][col] = 1;
+
+        if (dir == "l") {
+            dfs(row, col - 1, "l", visited, st);
+        }
+        if (dir == "r") {
+            dfs(row, col + 1, "r", visited, st);
+        }
+        if (dir == "d") {
+            dfs(row - 1, col, "d", visited, st);
+        }
+        if (dir == "u") {
+            dfs(row + 1, col, "u", visited, st);
+        }
+    }
+    int countUnguarded(int m, int n, vector<vector<int>>& guards, vector<vector<int>>& walls) {
+        vector<vector<int>> visited(m, vector<int>(n, 0));
+
+        set<pair<int, int>> st;
+        for (auto it : guards) {
+            st.insert({it[0], it[1]});
+            visited[it[0]][it[1]] = 1;
+        }
+        for (auto it : walls) {
+            st.insert({it[0], it[1]});
+            visited[it[0]][it[1]] = 1;
+        }
+        
+        for (auto it : guards) {
+            int row = it[0];
+            int col = it[1];
+            dfs(row, col - 1, "l", visited, st);
+            dfs(row, col + 1, "r", visited, st);
+            dfs(row - 1, col, "d", visited, st);
+            dfs(row + 1, col, "u", visited, st);
+        }
+
+        int cnt = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (visited[i][j] == 0) {
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+};
