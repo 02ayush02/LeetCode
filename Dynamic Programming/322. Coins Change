@@ -1,0 +1,50 @@
+class Solution {
+public:
+    long long solve(int index, vector<int>& coins,vector<vector<int>>& dp, int amount){
+        if (amount == 0) {
+            return 0;
+        }
+        if (index < 0) {
+            return INT_MAX;
+        }
+        if (dp[index][amount] != 0) return dp[index][amount];
+        long long notTake = solve(index - 1, coins, dp, amount);
+
+        long long take = INT_MAX;
+
+        if (amount >= coins[index]) {
+            take = 1 + solve(index, coins, dp, amount - coins[index]);
+        }
+
+        return dp[index][amount] = min(take, notTake);
+    }
+
+
+
+    int coinChange(vector<int>& coins, int amount) {
+        if (amount == 0) return 0;
+        int n = coins.size();
+        int maxi = 1e9;
+        vector<vector<int>> dp(n + 1, vector<int>(amount + 1, maxi));
+
+        for (int j = 0; j <= amount; j++) {
+            if (j % coins[0] == 0) dp[0][j] = j / coins[0];
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= amount; j++) {
+                int notTake = dp[i - 1][j];
+                int take = maxi;
+
+                if (j - coins[i] >= 0) {
+                    take = 1 + dp[i][j - coins[i]];
+                }
+
+                dp[i][j] = min(take, notTake);
+            }
+        }
+        return (dp[n - 1][amount] >= maxi ? -1 : dp[n - 1][amount]);
+
+        // return (solve(n - 1, coins, dp, amount) == INT_MAX ? -1 : dp[n - 1][amount]);
+    }
+};
